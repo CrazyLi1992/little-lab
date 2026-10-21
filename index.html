@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f8fa">
+  <meta name="description" content="一个属于自己的小功能实验室。用专注计时、待办清单、随机抽签和文本工具，给日常多一点轻巧。">
+  <title>小功能实验室 · Little Lab</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%232c55e8'/%3E%3Cpath d='M21 18v28h25' fill='none' stroke='white' stroke-width='8' stroke-linecap='round'/%3E%3Ccircle cx='43' cy='21' r='6' fill='%23f7b77a'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="小功能实验室首页"><span class="brand-mark">L<span></span></span><span>小功能实验室<small>LITTLE LAB</small></span></a>
+    <div class="header-right"><span class="private-label"><span class="status-dot"></span> 我的个人实验台</span><button id="theme-toggle" class="icon-button" aria-label="切换到深色主题" title="切换主题"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20.2 14.1A8.5 8.5 0 0 1 9.9 3.8a8.5 8.5 0 1 0 10.3 10.3Z"/></svg></button><span class="avatar" aria-hidden="true">L</span></div>
+  </header>
+  <main id="top">
+    <section class="intro" aria-labelledby="page-title">
+      <div><div class="eyebrow"><span class="tiny-spark">✳</span> A LITTLE SPACE FOR YOUR IDEAS</div><h1 id="page-title">让日常，多一点<span>小灵感。</span></h1><p>一个自己的小实验台。专注一会儿、记录一点，或者把选择交给随机。</p></div>
+      <div class="intro-art" aria-hidden="true"><div class="orbit"></div><div class="art-square">✳</div><span class="art-dot"></span><span class="art-caption">small tools.<br>big possibilities.</span><span class="art-plus">+</span></div>
+    </section>
+    <div class="workspace-bar"><div class="workspace-title"><span class="grid-symbol" aria-hidden="true">▦</span><h2>我的工具台</h2><span class="count-badge">04</span></div><span class="save-note"><span class="status-dot"></span> 本地保存 · 随开随用</span></div>
+    <nav class="tool-nav" aria-label="快速跳转"><a href="#focus">01 专注计时</a><a href="#todo">02 待办清单</a><a href="#random">03 随机抽签</a><a href="#text">04 文本工具</a></nav>
+    <div class="tool-grid">
+      <section id="focus" class="card focus-card" aria-labelledby="focus-heading">
+        <div class="card-header"><div class="heading-group"><span class="tool-icon focus-icon" aria-hidden="true">◷</span><div><h2 id="focus-heading">专注计时</h2><p>一次只做一件事，就很好。</p></div></div><span class="card-number">01</span></div>
+        <div class="timer-layout"><div class="timer-ring"><svg viewBox="0 0 200 200" aria-hidden="true"><circle class="ring-track" cx="100" cy="100" r="88"/><circle id="timer-progress" cx="100" cy="100" r="88"/></svg><div class="timer-center"><span id="timer-label">准备好了吗</span><time id="timer-display" role="timer" aria-label="剩余时间">25:00</time><span class="timer-caption">留一点时间给自己</span></div></div><div class="timer-side"><div class="mode-tabs" aria-label="计时模式"><button class="selected" data-minutes="25" aria-pressed="true">专注 <span>25 min</span></button><button data-minutes="5" aria-pressed="false">休息 <span>5 min</span></button></div><p class="timer-tip">暂时放下干扰，<br>慢慢进入自己的节奏。</p><span id="focus-count" class="session-count">今天已完成 0 次专注</span></div></div>
+        <div class="timer-actions"><button id="timer-start" class="button timer-primary"><span aria-hidden="true">▶</span> 开始专注</button><button id="timer-reset" class="button timer-reset" aria-label="重置计时器" title="重置计时器">↺</button></div>
+        <p id="timer-message" class="sr-only" role="status" aria-live="polite"></p>
+      </section>
+      <section id="todo" class="card" aria-labelledby="todo-heading">
+        <div class="card-header"><div class="heading-group"><span class="tool-icon todo-icon" aria-hidden="true">✓</span><div><h2 id="todo-heading">待办清单</h2><p>小小的进展，也值得打个勾。</p></div></div><span class="card-number">02</span></div>
+        <form id="todo-form" class="input-row"><label class="sr-only" for="todo-input">新增待办</label><input id="todo-input" maxlength="160" placeholder="下一件想完成的小事…" autocomplete="off" required><button class="add-button" aria-label="添加待办" type="submit">+</button></form>
+        <div class="task-area"><ul id="todo-list" class="todo-list"></ul><div id="todo-empty" class="empty-state"><span class="empty-check" aria-hidden="true">✓<i></i><b>✦</b></span><h3>给今天一个小目标</h3><p>不用很多，从一件小事开始。</p></div></div>
+        <div class="todo-bottom"><span id="todo-summary" aria-live="polite">0 / 0 已完成</span><button id="clear-completed" class="text-button" disabled>清除已完成</button></div><div class="todo-progress" aria-hidden="true"><span id="todo-progress-bar"></span></div>
+      </section>
+      <section id="random" class="card random-card" aria-labelledby="random-heading">
+        <div class="card-header"><div class="heading-group"><span class="tool-icon random-icon" aria-hidden="true">⚄</span><div><h2 id="random-heading">随机抽签</h2><p>纠结的时候，让一点偶然来帮忙。</p></div></div><span class="card-number">03</span></div>
+        <div class="field-label"><label for="random-options">候选选项</label><span>每行一个 · 可替换示例</span></div><textarea id="random-options" rows="4" maxlength="10000" spellcheck="false">散步十分钟
+听一首喜欢的歌
+喝杯水，伸个懒腰
+整理一下桌面</textarea>
+        <div id="random-result" class="random-result" role="status" aria-live="polite"><span aria-hidden="true">✦</span><div><small id="random-result-label">今天的小惊喜</small><strong id="random-result-text">答案，就在下一次点击里。</strong></div></div>
+        <button id="draw-button" class="button draw-button"><span aria-hidden="true">⤨</span> 帮我选一个 <span class="button-arrow" aria-hidden="true">↗</span></button>
+      </section>
+      <section id="text" class="card" aria-labelledby="text-heading">
+        <div class="card-header"><div class="heading-group"><span class="tool-icon text-icon" aria-hidden="true">T<span>↗</span></span><div><h2 id="text-heading">文本工具</h2><p>整理文字，也整理一下思路。</p></div></div><span class="card-number">04</span></div>
+        <div class="text-toolbar"><div class="text-tabs" aria-label="文本模式"><button data-text-mode="count" class="selected" aria-pressed="true">字数统计</button><button data-text-mode="json" aria-pressed="false">JSON 格式化</button></div><button id="clear-text" class="text-button">清空</button></div>
+        <label class="sr-only" for="text-input">要处理的文本</label><textarea id="text-input" class="text-input" rows="5" placeholder="粘贴或输入文字，看看灵感有多长…" spellcheck="false"></textarea>
+        <div id="text-stats" class="text-stats"><div><strong id="char-count">0</strong><span>字符（不含空白）</span></div><div><strong id="word-count">0</strong><span>英文单词</span></div><div><strong id="line-count">0</strong><span>行数</span></div></div>
+        <div id="json-actions" class="json-actions" hidden><button id="format-json" class="button format-button">格式化 JSON</button><button id="copy-text" class="button copy-button">复制结果</button></div><p id="text-message" class="inline-message" role="status" aria-live="polite"></p>
+      </section>
+    </div>
+    <aside class="closing-note"><span aria-hidden="true">✳</span><p>不必是大工程。每一个好用的小功能，都是生活的小升级。</p><span class="version">LAB / V.01</span></aside>
+  </main>
+  <footer><span>Little Lab <span class="footer-dot">·</span> 为日常留一点实验精神</span><span>待办与偏好仅保存在当前浏览器</span></footer>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
