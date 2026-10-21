@@ -20,7 +20,7 @@
   function applyTheme() {
     document.documentElement.dataset.theme = theme;
     $('theme-toggle').setAttribute('aria-label', theme === 'light' ? '切换到深色主题' : '切换到浅色主题');
-    document.querySelector('meta[name="theme-color"]').content = theme === 'light' ? '#f7f8fa' : '#141a26';
+    document.querySelector('meta[name="theme-color"]').content = theme === 'light' ? '#fafafa' : '#18181b';
   }
   applyTheme();
   $('theme-toggle').addEventListener('click', () => { theme = theme === 'light' ? 'dark' : 'light'; applyTheme(); save('theme', theme); });

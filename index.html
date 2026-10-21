@@ -3,25 +3,27 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f7f8fa">
+  <meta name="theme-color" content="#fafafa">
   <meta name="description" content="一个属于自己的小功能实验室。用专注计时、待办清单、随机抽签和文本工具，给日常多一点轻巧。">
   <title>小功能实验室 · Little Lab</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%232c55e8'/%3E%3Cpath d='M21 18v28h25' fill='none' stroke='white' stroke-width='8' stroke-linecap='round'/%3E%3Ccircle cx='43' cy='21' r='6' fill='%23f7b77a'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="styles.css">
-  <script src="app.js" defer></script>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='4' fill='%23FBFB45'/%3E%3Cpath d='M20 16v32h27' fill='none' stroke='%2318181b' stroke-width='8'/%3E%3Ccircle cx='45' cy='19' r='5' fill='%2318181b'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css?v=2">
+  <script src="app.js?v=2" defer></script>
 </head>
-<body>
+<body id="top">
+  <a class="skip-link" href="#workspace">跳到工具台</a>
   <header class="site-header">
     <a class="brand" href="#top" aria-label="小功能实验室首页"><span class="brand-mark">L<span></span></span><span>小功能实验室<small>LITTLE LAB</small></span></a>
-    <div class="header-right"><span class="private-label"><span class="status-dot"></span> 我的个人实验台</span><button id="theme-toggle" class="icon-button" aria-label="切换到深色主题" title="切换主题"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20.2 14.1A8.5 8.5 0 0 1 9.9 3.8a8.5 8.5 0 1 0 10.3 10.3Z"/></svg></button><span class="avatar" aria-hidden="true">L</span></div>
+    <div class="header-right"><span class="rail-label" aria-hidden="true">YOUR DAILY EXPERIMENTS</span><button id="theme-toggle" class="icon-button" aria-label="切换到深色主题" title="切换主题"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20.2 14.1A8.5 8.5 0 0 1 9.9 3.8a8.5 8.5 0 1 0 10.3 10.3Z"/></svg></button></div>
   </header>
-  <main id="top">
+  <div class="masthead" aria-hidden="true"><div class="masthead-meta"><span>PERSONAL EXPERIMENT SPACE</span><span>EST. 2026 / VOL. 01</span></div><div class="masthead-title">LITTLE LAB<span>↗</span></div><div class="masthead-bottom"><span>小功能，大可能。</span><span>FOCUS / ORGANIZE / EXPLORE</span></div></div>
+  <main>
     <section class="intro" aria-labelledby="page-title">
-      <div><div class="eyebrow"><span class="tiny-spark">✳</span> A LITTLE SPACE FOR YOUR IDEAS</div><h1 id="page-title">让日常，多一点<span>小灵感。</span></h1><p>一个自己的小实验台。专注一会儿、记录一点，或者把选择交给随机。</p></div>
-      <div class="intro-art" aria-hidden="true"><div class="orbit"></div><div class="art-square">✳</div><span class="art-dot"></span><span class="art-caption">small tools.<br>big possibilities.</span><span class="art-plus">+</span></div>
+      <div><div class="eyebrow"><span class="tiny-spark">✳</span> A LITTLE SPACE FOR YOUR IDEAS</div><h1 id="page-title">让日常，多一点<span>小灵感。</span></h1><p>专注一会儿，记录一点。把日常的小事，变成有趣的小实验。</p></div>
+      <div class="intro-art" aria-hidden="true"><span class="art-square">✳</span><span class="art-caption">SMALL TOOLS.<br>BIG POSSIBILITIES.</span></div>
     </section>
-    <div class="workspace-bar"><div class="workspace-title"><span class="grid-symbol" aria-hidden="true">▦</span><h2>我的工具台</h2><span class="count-badge">04</span></div><span class="save-note"><span class="status-dot"></span> 本地保存 · 随开随用</span></div>
-    <nav class="tool-nav" aria-label="快速跳转"><a href="#focus">01 专注计时</a><a href="#todo">02 待办清单</a><a href="#random">03 随机抽签</a><a href="#text">04 文本工具</a></nav>
+    <div id="workspace" class="workspace-bar"><div class="workspace-title"><span class="grid-symbol" aria-hidden="true">▦</span><h2>我的工具台</h2><span class="count-badge">04</span></div><span class="save-note"><span class="status-dot"></span> 本地保存 · 随开随用</span></div>
+    <nav class="tool-nav" aria-label="快速跳转"><a href="#focus"><span>01</span>专注计时</a><a href="#todo"><span>02</span>待办清单</a><a href="#random"><span>03</span>随机抽签</a><a href="#text"><span>04</span>文本工具</a></nav>
     <div class="tool-grid">
       <section id="focus" class="card focus-card" aria-labelledby="focus-heading">
         <div class="card-header"><div class="heading-group"><span class="tool-icon focus-icon" aria-hidden="true">◷</span><div><h2 id="focus-heading">专注计时</h2><p>一次只做一件事，就很好。</p></div></div><span class="card-number">01</span></div>
@@ -52,7 +54,7 @@
         <div id="json-actions" class="json-actions" hidden><button id="format-json" class="button format-button">格式化 JSON</button><button id="copy-text" class="button copy-button">复制结果</button></div><p id="text-message" class="inline-message" role="status" aria-live="polite"></p>
       </section>
     </div>
-    <aside class="closing-note"><span aria-hidden="true">✳</span><p>不必是大工程。每一个好用的小功能，都是生活的小升级。</p><span class="version">LAB / V.01</span></aside>
+    <aside class="closing-note"><span aria-hidden="true">↗</span><p>不必是大工程。每一个好用的小功能，都是生活的小升级。</p><span class="version">KEEP EXPERIMENTING.</span></aside>
   </main>
   <footer><span>Little Lab <span class="footer-dot">·</span> 为日常留一点实验精神</span><span>待办与偏好仅保存在当前浏览器</span></footer>
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
