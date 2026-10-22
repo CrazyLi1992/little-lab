@@ -58,7 +58,7 @@
       </section>
       <section id="mqtt" tabindex="-1" class="card mqtt-card" aria-labelledby="mqtt-heading">
         <div class="card-header"><div class="heading-group"><span class="tool-icon" aria-hidden="true">⇄</span><div><h2 id="mqtt-heading">MQTT 通信测试</h2><p>连上设备，让消息来回跑一趟。</p></div></div><span class="card-number">05</span></div>
-        <div class="mqtt-endpoint"><div><strong>broker.emqx.io</strong><code>wss://broker.emqx.io:8084/mqtt</code></div><span id="mqtt-status" class="mqtt-status" role="status">未连接</span></div>
+        <p class="mqtt-note"><a class="button format-button" href="host.html">打开上位机测试台 ↗</a> · 协议模板 / 自动序列 / ACK / 收发日志</p><div class="mqtt-endpoint"><div><strong>broker.emqx.io</strong><code>wss://broker.emqx.io:8084/mqtt</code></div><span id="mqtt-status" class="mqtt-status" role="status">未连接</span></div>
         <p class="mqtt-note">网页使用安全 WebSocket，与设备端 <code>broker.emqx.io:1883</code> 通过相同主题互通。公共 Broker 的消息可能被他人读取，请勿发送敏感数据。</p>
         <div class="mqtt-connection"><span>客户端 ID：<code id="mqtt-client-id"></code></span><div class="mqtt-actions"><button id="mqtt-connect" class="button format-button">连接 Broker</button><button id="mqtt-disconnect" class="button copy-button" disabled>断开连接</button></div></div>
         <div class="mqtt-columns">
