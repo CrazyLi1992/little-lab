@@ -4,12 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#fafafa">
-  <meta name="description" content="一个属于自己的小功能实验室。用专注计时、待办清单、随机抽签和文本工具，给日常多一点轻巧。">
+  <meta name="description" content="一个属于自己的小功能实验室。用专注计时、待办清单、随机抽签、文本工具和 MQTT 通信测试，给日常多一点轻巧。">
   <title>小功能实验室 · Little Lab</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='4' fill='%23FBFB45'/%3E%3Cpath d='M20 16v32h27' fill='none' stroke='%2318181b' stroke-width='8'/%3E%3Ccircle cx='45' cy='19' r='5' fill='%2318181b'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="styles.css?v=4">
+  <link rel="stylesheet" href="styles.css?v=5">
   <script src="app.js?v=3" defer></script>
   <script src="ui.js?v=1" defer></script>
+  <script src="vendor/mqtt-5.16.1.min.js" defer></script>
+  <script src="mqtt-tool.js?v=1" defer></script>
 </head>
 <body id="top">
   <a class="skip-link" href="#workspace">跳到工具台</a>
@@ -23,8 +25,8 @@
       <div><div class="eyebrow"><span class="tiny-spark">✳</span> A LITTLE SPACE FOR YOUR IDEAS</div><h1 id="page-title">让日常，多一点<span>小灵感。</span></h1><p>专注一会儿，记录一点。把日常的小事，变成有趣的小实验。</p></div>
       <div class="intro-art" aria-hidden="true"><span class="art-square">✳</span><span class="art-caption">SMALL TOOLS.<br>BIG POSSIBILITIES.</span></div>
     </section>
-    <div id="workspace" tabindex="-1" class="workspace-bar"><div class="workspace-title"><span class="grid-symbol" aria-hidden="true">▦</span><h2>我的工具台</h2><span class="count-badge">04</span></div><span class="save-note"><span class="status-dot"></span> 本地保存 · 随开随用</span></div>
-    <nav id="tool-nav" class="tool-nav" aria-label="快速跳转"><a href="#focus"><span>01</span>专注计时</a><a href="#todo"><span>02</span>待办清单</a><a href="#random"><span>03</span>随机抽签</a><a href="#text"><span>04</span>文本工具</a></nav>
+    <div id="workspace" tabindex="-1" class="workspace-bar"><div class="workspace-title"><span class="grid-symbol" aria-hidden="true">▦</span><h2>我的工具台</h2><span class="count-badge">05</span></div><span class="save-note"><span class="status-dot"></span> 随开随用 · MQTT 需联网</span></div>
+    <nav id="tool-nav" class="tool-nav" aria-label="快速跳转"><a href="#focus"><span>01</span>专注计时</a><a href="#todo"><span>02</span>待办清单</a><a href="#random"><span>03</span>随机抽签</a><a href="#text"><span>04</span>文本工具</a><a href="#mqtt"><span>05</span>MQTT 测试</a></nav>
     <div class="tool-grid">
       <section id="focus" tabindex="-1" class="card focus-card" aria-labelledby="focus-heading">
         <div class="card-header"><div class="heading-group"><span class="tool-icon focus-icon" aria-hidden="true">◷</span><div><h2 id="focus-heading">专注计时</h2><p>一次只做一件事，就很好。</p></div></div><span class="card-number">01</span></div>
@@ -54,12 +56,30 @@
         <div id="text-stats" class="text-stats"><div><strong id="char-count">0</strong><span>字符（不含空白）</span></div><div><strong id="word-count">0</strong><span>英文单词</span></div><div><strong id="line-count">0</strong><span>行数</span></div></div>
         <div id="json-actions" class="json-actions" hidden><button id="format-json" class="button format-button">格式化 JSON</button><button id="copy-text" class="button copy-button">复制结果</button></div><p id="text-message" class="inline-message" role="status" aria-live="polite"></p>
       </section>
+      <section id="mqtt" tabindex="-1" class="card mqtt-card" aria-labelledby="mqtt-heading">
+        <div class="card-header"><div class="heading-group"><span class="tool-icon" aria-hidden="true">⇄</span><div><h2 id="mqtt-heading">MQTT 通信测试</h2><p>连上设备，让消息来回跑一趟。</p></div></div><span class="card-number">05</span></div>
+        <div class="mqtt-endpoint"><div><strong>broker.emqx.io</strong><code>wss://broker.emqx.io:8084/mqtt</code></div><span id="mqtt-status" class="mqtt-status" role="status">未连接</span></div>
+        <p class="mqtt-note">网页使用安全 WebSocket，与设备端 <code>broker.emqx.io:1883</code> 通过相同主题互通。公共 Broker 的消息可能被他人读取，请勿发送敏感数据。</p>
+        <div class="mqtt-connection"><span>客户端 ID：<code id="mqtt-client-id"></code></span><div class="mqtt-actions"><button id="mqtt-connect" class="button format-button">连接 Broker</button><button id="mqtt-disconnect" class="button copy-button" disabled>断开连接</button></div></div>
+        <div class="mqtt-columns">
+          <div class="mqtt-compose">
+            <label for="mqtt-sub-topic">订阅主题 <small>支持 + 和 #，每次订阅一个主题</small></label>
+            <input id="mqtt-sub-topic" maxlength="1024" spellcheck="false" autocomplete="off">
+            <div class="mqtt-actions"><button id="mqtt-subscribe" class="button copy-button" disabled>订阅主题</button><button id="mqtt-unsubscribe" class="button copy-button" disabled>取消订阅</button></div>
+            <p id="mqtt-subscription" class="mqtt-note">尚未订阅</p>
+            <label for="mqtt-pub-topic">发布主题</label><input id="mqtt-pub-topic" maxlength="1024" spellcheck="false" autocomplete="off">
+            <label for="mqtt-payload">消息内容 <small>UTF-8 文本，最多 16 KB</small></label><textarea id="mqtt-payload" rows="3" maxlength="16384" spellcheck="false">Hello from Little Lab!</textarea>
+            <div class="mqtt-actions"><label class="mqtt-qos" for="mqtt-qos">QoS <select id="mqtt-qos"><option value="0">0 · 至多一次</option><option value="1">1 · 至少一次</option></select></label><button id="mqtt-publish" class="button format-button" disabled>发布消息</button></div>
+          </div>
+          <div class="mqtt-log-panel"><div class="mqtt-log-heading"><h3>通信日志</h3><button id="mqtt-clear" class="text-button">清空日志</button></div><p class="mqtt-note">最新消息在上 · 最多 100 条 · 接收内容显示前 4 KB</p><ol id="mqtt-log" class="mqtt-log" tabindex="0" aria-label="MQTT 通信日志"></ol><p id="mqtt-feedback" class="mqtt-feedback" role="status" aria-live="polite">连接后先订阅，再发布到相同主题，即可查看回环消息。日志仅保留在当前页面。</p></div>
+        </div>
+      </section>
     </div>
     <aside class="closing-note"><span aria-hidden="true">↗</span><p>不必是大工程。每一个好用的小功能，都是生活的小升级。</p><span class="version">KEEP EXPERIMENTING.</span></aside>
   </main>
   <footer><span>Little Lab <span class="footer-dot">·</span> 为日常留一点实验精神</span><span>待办与偏好仅保存在当前浏览器</span></footer>
   <div class="floating-tools">
-    <details id="updates"><summary aria-label="更新记录" title="更新记录">≡</summary><section class="updates-panel" aria-labelledby="updates-title"><div class="updates-heading"><h2 id="updates-title">RECENT LOGS <small>更新记录</small></h2><button id="close-updates" class="icon-button" aria-label="关闭更新记录">×</button></div><ol><li><time datetime="2026-10-22">2026.10.22</time><p>补齐滚动标题、卡片角标、导航反馈、手机端菜单和返回顶部。</p></li><li><time datetime="2026-10-21">2026.10.21</time><p>工具台换上黑白黄风格，加入自定义鼠标指针。</p></li></ol></section></details>
+    <details id="updates"><summary aria-label="更新记录" title="更新记录">≡</summary><section class="updates-panel" aria-labelledby="updates-title"><div class="updates-heading"><h2 id="updates-title">RECENT LOGS <small>更新记录</small></h2><button id="close-updates" class="icon-button" aria-label="关闭更新记录">×</button></div><ol><li><time datetime="2026-10-22">2026.10.22</time><p>新增 MQTT 通信测试，支持连接、订阅、发布和收发日志。</p></li><li><time datetime="2026-10-22">2026.10.22</time><p>补齐滚动标题、卡片角标、导航反馈、手机端菜单和返回顶部。</p></li><li><time datetime="2026-10-21">2026.10.21</time><p>工具台换上黑白黄风格，加入自定义鼠标指针。</p></li></ol></section></details>
     <a class="back-top" href="#top" aria-label="返回顶部" title="返回顶部">↑</a>
   </div>
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
