@@ -98,8 +98,25 @@
   $('ack-edit').onclick=()=>guard(()=>{$('payload').value=JSON.stringify(P.ack(selectedPost(),$('ack-status').value));bytes();});
   $('ack-send').onclick=()=>guard(()=>{const post=selectedPost();if(post.sn!==config.sn)throw Error('所选上报 SN 与连接配置不同；可断开后采用该 SN，或在编辑器构造报文');return publish(JSON.stringify(P.ack(post,$('ack-status').value)));});
   async function guard(fn){try{await fn();}catch(err){event(err.message);}}
-  for(const name of Object.keys(P.templates))$('action').add(new Option(name,name));
-  function template(){$('params').value=JSON.stringify(P.templates[$('action').value],null,2);generate();}
+  for(const name of Object.keys(P.templates))$('action').add(new Option(P.help[name].name+' · '+name,name));
+  function template(){
+    const action=$('action').value, help=P.help[action];
+    $('command-purpose').textContent=help.purpose;
+    $('command-mode').textContent=help.cmd?'操作顺序：先选择“进入 / 退出指令模式”发送 on，再发送本指令；结束后发送 off。':'可直接构造本指令；是否收到回复请查看日志。';
+    $('parameter-help').replaceChildren();
+    if(!help.fields.length){const term=document.createElement('dt'),text=document.createElement('dd');term.textContent='无需参数';text.textContent='保留空对象 {}，不要填写空字符串或删除 params。';$('parameter-help').append(term,text);}
+    for(const [key,name,type,description] of help.fields){
+      const row=document.createElement('div'), label=document.createElement('dt'), text=document.createElement('dd');
+      label.textContent=name+' · '+key+'（'+type+'）';text.textContent=description;row.append(label,text);$('parameter-help').append(row);
+    }
+    $('parameter-examples').replaceChildren();
+    for(const [name,params] of Object.entries(help.examples||{'默认示例':P.templates[action]})){
+      const button=document.createElement('button');button.type='button';button.textContent='填入'+name;
+      button.onclick=()=>guard(()=>{$('params').value=JSON.stringify(params,null,2);generate();feedback('已填入'+name+'并生成新报文，尚未发送');});
+      $('parameter-examples').append(button);
+    }
+    $('params').value=JSON.stringify(P.templates[action],null,2);generate();
+  }
   function generate(){$('payload').value=JSON.stringify(P.command($('action').value,JSON.parse($('params').value),$('sn').value.trim()));bytes();}
   function bytes(){const n=new TextEncoder().encode($('payload').value).length;$('bytes').textContent=n+' 字节'+(n>383?' · 超过常规 383 字节报文范围；仍允许发送以测试边界':'');}
   $('action').onchange=()=>guard(template);$('generate').onclick=()=>guard(generate);

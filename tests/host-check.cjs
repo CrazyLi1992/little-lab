@@ -1,6 +1,11 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const base=fs.existsSync(path.join(__dirname,'../host.js'))?'../':'../dist/';
 const P=require(base+'host-protocol.js');
+assert.deepEqual(Object.keys(P.help).sort(),Object.keys(P.templates).sort());
+for(const [action,params] of Object.entries(P.templates)){
+ assert(P.help[action].name&&P.help[action].purpose);
+ for(const key of Object.keys(params))assert(P.help[action].fields.some(f=>f[0]===key&&f.every(Boolean)),action+': missing help for '+key);
+}
 assert(P.id().length<=23);assert.notEqual(P.id(),P.id());
 assert.equal(typeof P.command('timeSync',{timestamp:'$utc'},'test').params.timestamp,'number');
 const post={action:'post',id:'001',sn:'test',params:{report_type:'non_realtime'}};
@@ -20,6 +25,11 @@ vm.runInNewContext(fs.readFileSync(path.join(__dirname,base,'host.js'),'utf8'),{
 const flush=async()=>{for(let i=0;i<12;i++)await Promise.resolve();};
 const receive=(message,retain=false)=>current.emit('message','isolated/up',{toString:()=>JSON.stringify(message)},{retain});
 (async()=>{
+ assert(el('action').children[0].text.includes('读取配置'));
+ el('action').value='setWakeSchedule';el('action').onchange();await flush();
+ assert.equal(el('parameter-examples').children.length,3);el('parameter-examples').children[1].click();await flush();
+ assert.equal(JSON.parse(el('payload').value).action,'setWakeSchedule');assert.equal(JSON.parse(el('params').value).policy,'monthly');assert.equal(published.length,0);
+ el('action').value='getConfig';el('action').onchange();await flush();assert.equal(el('parameter-help').children[0].textContent,'无需参数');
  assert(el('send').disabled);el('connect').click();current.emit('connect');assert(!el('send').disabled);assert.equal(published.length,0);
  receive(post);assert.equal(published.length,0);
  el('auto-ack').checked=true;receive({...post,sn:'other'});receive(post,true);assert.equal([...timers.values()].filter(t=>t.ms===0).length,0);
