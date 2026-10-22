@@ -16,14 +16,6 @@
     try { localStorage.setItem('little-lab:' + key, JSON.stringify(value)); }
     catch { notify('浏览器暂时无法保存，当前页面仍可使用。'); }
   }
-  let theme = read('theme', 'light') === 'dark' ? 'dark' : 'light';
-  function applyTheme() {
-    document.documentElement.dataset.theme = theme;
-    $('theme-toggle').setAttribute('aria-label', theme === 'light' ? '切换到深色主题' : '切换到浅色主题');
-    document.querySelector('meta[name="theme-color"]').content = theme === 'light' ? '#fafafa' : '#09090b';
-  }
-  applyTheme();
-  $('theme-toggle').addEventListener('click', () => { theme = theme === 'light' ? 'dark' : 'light'; applyTheme(); save('theme', theme); });
 
   const localDay = () => new Date().toLocaleDateString('sv-SE');
   let sessions = read('sessions', {});
