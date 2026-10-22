@@ -46,12 +46,14 @@
   });
   const motion = document.getElementById('motion-toggle');
   const track = document.querySelector('.marquee-track');
-  motion.hidden = false;
-  motion.addEventListener('click', () => {
+  if (motion && track) {
+    motion.hidden = false;
+    motion.addEventListener('click', () => {
     const paused = motion.getAttribute('aria-pressed') !== 'true';
     motion.setAttribute('aria-pressed', String(paused));
     motion.textContent = paused ? '继续背景滚动' : '暂停背景滚动';
     track.style.animationPlayState = paused ? 'paused' : 'running';
-  });
+    });
+  }
   document.documentElement.classList.add('ui-ready');
 })();

@@ -26,6 +26,7 @@
     $('pause').disabled=!active||active.paused; $('resume').disabled=!active?.paused; $('stop').disabled=!active;
     $('plan').disabled=!!active; $('load').disabled=!!active; $('import').disabled=!!active;
     $('connection').textContent=ready?'Broker 已连接 / 已订阅':client?'连接中…':'未连接';
+    $('connection').dataset.connected=String(ready);
   }
   function stop(){if(active){active.controller.abort();active.resume?.();}}
   function disconnect(reason='已断开'){

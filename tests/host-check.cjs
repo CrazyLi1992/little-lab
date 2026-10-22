@@ -8,7 +8,7 @@ assert.deepEqual(P.ack(post),{action:'postResponse',id:'001',sn:'test',params:{s
 assert(!P.matches({action:'getConfigResponse',id:'1',sn:'other'},{action:'getConfig',id:'1',sn:'test'}));
 for(const plan of ['{}','[]','[{"type":"send","action":"x","typo":1}]','[{"type":"delay","ms":-1}]','[{"type":"send","raw":"x","waitReply":true}]'])assert.throws(()=>P.plan(plan));
 class Element{
- constructor(){this.value='';this.textContent='';this.children=[];this.checked=false;}
+ constructor(){this.value='';this.textContent='';this.children=[];this.checked=false;this.dataset={};}
  append(...x){this.children.push(...x)} replaceChildren(){this.children=[]} add(option){this.children.push(option);if(this.children.length===1)this.value=option.value}
  click(){if(!this.disabled)return this.onclick?.()}
 }
